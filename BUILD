@@ -107,7 +107,7 @@ cc_binary(
 py_binary(
     name = "simulation",
     srcs = [
-        "examples/inverted_pendulum/simulation.py",
+        "src/examples/inverted_pendulum/simulation.py",
     ],
     deps = [":py_access_service_proto"],
 )
@@ -115,7 +115,7 @@ py_binary(
 py_binary(
     name = "simulation_2cpus",
     srcs = [
-        "examples/inverted_pendulum_2cpus/simulation_2cpus.py",
+        "src/examples/inverted_pendulum_2cpus/simulation_2cpus.py",
     ],
     deps = [":py_access_service_proto"],
 )
@@ -123,7 +123,7 @@ py_binary(
 cc_binary(
     name = "example_comm_module",
     srcs = [
-        "examples/idle_plc/comm_module.cc",
+        "src/examples/idle_plc/comm_module.cc",
     ],
     copts = ["-Iexternal/gtest/include -I/usr/local/include -fpermissive -Wno-reorder"],
     linkstatic = 1,
@@ -133,7 +133,7 @@ cc_binary(
 cc_binary(
     name = "example_hmi",
     srcs = [
-        "examples/inverted_pendulum/hmi.cc",
+        "src/examples/inverted_pendulum/hmi.cc",
     ],
     copts = ["-Iexternal/gtest/include -I/usr/local/include -fpermissive -Wno-reorder"],
     linkstatic = 1,
@@ -146,7 +146,7 @@ cc_binary(
 cc_binary(
     name = "example_hmi_2conns",
     srcs = [
-        "examples/inverted_pendulum_2cpus/hmi.cc",
+        "src/examples/inverted_pendulum_2cpus/hmi.cc",
     ],
     copts = ["-Iexternal/gtest/include -I/usr/local/include -fpermissive -Wno-reorder"],
     linkstatic = 1,
