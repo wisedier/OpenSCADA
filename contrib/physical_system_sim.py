@@ -1,17 +1,13 @@
-from __future__ import division
 from abc import ABCMeta, abstractmethod
 
-class PhysicalSystemSim:
+
+class PhysicalSystemSim(metaclass=ABCMeta):
     """Generic Physical system simulation abstract class.
 
     Any physical system simulator which needs to interact with OpenSCADA PLCs
     needs to implement this Class.
     """
-    __metaclass__ = ABCMeta
- 
-    def __init__(self, **kwargs):
-        pass
-    
+
     @abstractmethod
     def progress(self, timestep_secs):
         """This method is called internally to advance the simulation by a step size.

@@ -9,7 +9,6 @@
 
 
 from contrib.emulation_driver import EmulationDriver
-from pendulum_sim import PendulumSystemSimulator
 import argparse
 import os
 import signal
@@ -22,7 +21,7 @@ stop = False
 
 def handler(signum, frame):
     global stop
-    print 'Pressed Ctrl-C! Scheduled clean exit ...'
+    print('Pressed Ctrl-C! Scheduled clean exit ...')
     stop = True
     
 
@@ -39,7 +38,7 @@ def start_grpc_server(path_to_plc_specifications_dir, log_file_fd):
         args = ["pc_grpc_server", path_to_plc_specifications_dir]
         os.execvp(args[0], args)
     else:
-        print "Started PC GRPC Server with pid ", newpid
+        print("Started PC GRPC Server with pid ", newpid)
         return newpid
 
 def start_plc(path_to_plc_specification_file, is_virtual, rel_cpu_speed, 
@@ -50,7 +49,7 @@ def start_plc(path_to_plc_specification_file, is_virtual, rel_cpu_speed,
         os.dup2(log_file_fd, sys.stdout.fileno())
         os.dup2(log_file_fd, sys.stderr.fileno())
 
-        if is_virtual == True:
+        if is_virtual:
             # We change process group here so that any signal sent to the 
             # main process doesn't automatically affect all forked children
             # This is necessary for a clean exit if interrupted
@@ -62,7 +61,7 @@ def start_plc(path_to_plc_specification_file, is_virtual, rel_cpu_speed,
             args = ["plc_runner", "-f", path_to_plc_specification_file]
             os.execvp(args[0], args)
     else:
-        print "Started PLC Runner with pid ", newpid
+        print("Started PLC Runner with pid ", newpid)
         return newpid
 
 def start_comm_module(path_to_plc_specification_file, ip_address_to_listen,

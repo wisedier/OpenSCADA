@@ -1,24 +1,24 @@
 import sys
-import os
 import time
+
 import kronos_functions as kf
-import sys
+
 
 class EmulationDriver(object):
     """A Wrapper used to drive co/simulation-emulation of PLCs and physical system simulations."""
 
-    def __init__(self, 
-            number_dilated_nodes, 
-            n_insns_per_round=1000000,
-            rel_cpu_speed=1.0, 
-            is_virtual=False,
-            physical_system_sim_driver=None):
+    def __init__(self,
+                 number_dilated_nodes,
+                 n_insns_per_round=1000000,
+                 rel_cpu_speed=1.0,
+                 is_virtual=False,
+                 physical_system_sim_driver=None):
 
         """Performs some initialization and also optionally initializes Kronos.
 
         Args:
             is_virtual: If True Kronos is initialized
-            physical_system_driver: An object which implements PhysicalSystemSim
+            physical_system_sim_driver: An object which implements PhysicalSystemSim
                 abstract class defined in contib/physical_system_sim.py. If it
                 is None, then it denotes that this co-simulation has no attached
                 physical simulator.
@@ -42,19 +42,18 @@ class EmulationDriver(object):
             for e.g HMIs, modbus_comm_module) which use Instruction-driven 
             virtual time advancement (INS-VT), then these two quantities become relevant.
         """
-        
+
         self.is_virtual = is_virtual
         self.num_tracers = number_dilated_nodes
         self.n_progressed_rounds = 0
-        self.timestep_per_round_secs =\
-             (float(n_insns_per_round)/rel_cpu_speed)/1000000000.0
+        self.timestep_per_round_secs = (float(n_insns_per_round) / rel_cpu_speed) / 1000000000.0
         self.total_time_elapsed = 0.0
-        assert number_dilated_nodes > 0 
-        if self.is_virtual == True:
-            print "Initializing Kronos ..."
-            if kf.initializeExp(1) < 0 :
-                print "Kronos initialization failed ! Make sure you are running\
-                    the dilated kernel and kronos module is loaded !"
+        assert number_dilated_nodes > 0
+        if self.is_virtual:
+            print("Initializing Kronos ...")
+            if kf.initializeExp(1) < 0:
+                print("Kronos initialization failed ! Make sure you are running the dilated kernel "
+                      "and kronos module is loaded !")
                 sys.exit(0)
 
         self.physical_system_sim_driver = physical_system_sim_driver
@@ -62,12 +61,12 @@ class EmulationDriver(object):
     def wait_for_initialization(self):
         """Wait for all dilated nodes to register themselves with Kronos."""
 
-        print "Waiting for all nodes to register ..."
-        if self.is_virtual == True:
+        print("Waiting for all nodes to register ...")
+        if self.is_virtual:
             while kf.synchronizeAndFreeze(self.num_tracers) <= 0:
-                print "Kronos >> Synchronize and Freeze failed. Retrying in 1 sec"
+                print("Kronos >> Synchronize and Freeze failed. Retrying in 1 sec")
                 time.sleep(1)
-        print "Resuming ..."
+        print("Resuming ...")
 
     def progress_for(self, time_step_secs):
         """Run the entire co/simulation-emulation for specified time.
@@ -80,20 +79,19 @@ class EmulationDriver(object):
             None
         """
 
-        if self.is_virtual and self.n_progressed_rounds == 0 :
-            print "Starting Synchronized Experiment ..."
+        if self.is_virtual and self.n_progressed_rounds == 0:
+            print("Starting Synchronized Experiment ...")
             kf.startExp()
 
         if self.is_virtual:
             n_rounds = float(time_step_secs) / self.timestep_per_round_secs
 
-            if n_rounds <= 0 :
+            if n_rounds <= 0:
                 n_rounds = 1
             kf.progress_n_rounds(int(n_rounds))
             self.n_progressed_rounds += int(n_rounds)
         else:
             pass
-            #time.sleep(time_step_secs)
 
         self.total_time_elapsed += float(time_step_secs)
         if self.physical_system_sim_driver is not None:
@@ -123,24 +121,22 @@ class EmulationDriver(object):
             current_timestamp = time.time()
         end_time = current_timestamp + run_time
 
-        if self.is_virtual == False:
+        if not self.is_virtual:
             return self.progress_for(run_time)
 
         synchronization_timestep = self.timestep_per_round_secs
         while current_timestamp <= end_time:
 
-            if self.is_virtual == False:		
+            if not self.is_virtual:
                 current_timestamp = time.time()
             else:
                 current_timestamp += synchronization_timestep
-                
+
             self.progress_for(synchronization_timestep)
-
-
 
     def stop_exp(self):
         """Stops the Kronos experiment."""
 
         if self.is_virtual:
-            print "Stopping Synchronized Experiment ..."
+            print("Stopping Synchronized Experiment ...")
             kf.stopExp()
