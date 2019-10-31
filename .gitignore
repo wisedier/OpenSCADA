@@ -10,3 +10,4 @@ bazel-OpenSCADA
 bazel-out
 bazel-testlogs
 bazel-genfiles
+.idea
