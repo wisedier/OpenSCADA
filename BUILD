@@ -159,7 +159,7 @@ cc_binary(
 cc_binary(
     name = "modbus_comm_module",
     srcs = [
-        "contrib/modbus_comm_module.cc",
+        "src/contrib/modbus_comm_module.cc",
     ],
     copts = ["-Iexternal/gtest/include -fpermissive -Wno-reorder -Wno-sign-compare -Wno-delete-non-virtual-dtor"],
     linkstatic = 1,
@@ -172,7 +172,7 @@ cc_binary(
 cc_binary(
     name = "plc_runner",
     srcs = [
-        "contrib/plc_runner.cc",
+        "src/contrib/plc_runner.cc",
     ],
     copts = ["-Iexternal/gtest/include -I/usr/local/include -fpermissive -Wno-reorder -Wno-switch -Wno-delete-non-virtual-dtor"],
     linkstatic = 1,
