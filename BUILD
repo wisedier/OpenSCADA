@@ -107,16 +107,22 @@ cc_binary(
 py_binary(
     name = "simulation",
     srcs = [
+        "src/contrib/emulation_driver.py",
+        "src/contrib/physical_system_sim.py",
+        "src/examples/models.py",
         "src/examples/inverted_pendulum/simulation.py",
+        "src/examples/inverted_pendulum/pendulum_sim.py",
     ],
-    deps = [":py_access_service_proto"],
+    main = "src/examples/inverted_pendulum/simulation.py",
+    imports = ["src", "py_access_service_proto_pb/src"],
+    deps = [
+        ":py_access_service_proto",
+    ],
 )
 
 py_binary(
     name = "simulation_2cpus",
-    srcs = [
-        "src/examples/inverted_pendulum_2cpus/simulation_2cpus.py",
-    ],
+    srcs = ["src/examples/inverted_pendulum_2cpus/simulation_2cpus.py"],
     deps = [":py_access_service_proto"],
 )
 

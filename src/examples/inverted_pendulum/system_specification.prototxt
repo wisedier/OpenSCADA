@@ -326,4 +326,4 @@ var_global {
     }
 }
 
-resource_file_path: "~/OpenSCADA/examples/inverted_pendulum/CPU_001.prototxt"
+resource_file_path: "~/OpenSCADA/src/examples/inverted_pendulum/CPU_001.prototxt"
